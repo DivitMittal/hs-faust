@@ -113,7 +113,7 @@ foreign import ccall unsafe "CsigMin"
     c_sigMin :: Signal -> Signal -> IO Signal
 foreign import ccall unsafe "CsigPow"
     c_sigPow :: Signal -> Signal -> IO Signal
-foreign import ccall unsafe "CsigRemainder
+foreign import ccall unsafe "CsigRemainder"
     c_sigRemainder :: Signal -> Signal -> IO Signal
 foreign import ccall unsafe "CsigRint"
     c_sigRint :: Signal -> IO Signal
