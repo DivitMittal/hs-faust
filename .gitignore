@@ -1,3 +1,4 @@
 **/dist**
 **/ref
 .direnv
+**/.DS_Store
