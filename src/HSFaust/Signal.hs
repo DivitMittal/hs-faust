@@ -1,14 +1,17 @@
-module HSFaust.Signal (
-    -- * Basic Constructors
+module HSFaust.Signal
+  ( -- * Basic Constructors
     sigInt,
     sigReal,
     sigInput,
+
     -- * Casting
     sigIntCast,
     sigFloatCast,
+
     -- * Delays
     sigDelay,
     sigDelay1,
+
     -- * Arithmetic Operators
     sigAdd,
     sigSub,
@@ -18,6 +21,7 @@ module HSFaust.Signal (
     sigLeftShift,
     sigLRightShift,
     sigARightShift,
+
     -- * Comparison Operators
     sigGT,
     sigLT,
@@ -25,10 +29,12 @@ module HSFaust.Signal (
     sigLE,
     sigEQ,
     sigNE,
+
     -- * Bitwise Operators
     sigAND,
     sigOR,
     sigXOR,
+
     -- * Math Functions
     sigAbs,
     sigAcos,
@@ -51,22 +57,27 @@ module HSFaust.Signal (
     sigMax,
     sigFmod,
     sigAtan2,
+
     -- * Recursion Primitives
     sigSelf,
     sigRecursion,
     sigSelfN,
     sigRecursionN,
+
     -- * Soundfile Primitives
     sigSoundfile,
     sigSoundfileLength,
     sigSoundfileRate,
     sigSoundfileBuffer,
+
     -- * Utilities
     isNil,
     tree2str,
+
     -- * Sample Rate Helper
-    sigSR
-) where
+    sigSR,
+  )
+where
 
 import           Foreign.C.String
 import           Foreign.C.Types
@@ -234,8 +245,8 @@ sigSelfN = c_sigSelfN . fromIntegral
 
 sigRecursionN :: [Signal] -> IO [Signal]
 sigRecursionN signals = do
-    resultPtr <- withArray0 nullPtr signals c_sigRecursionN
-    return signals
+  resultPtr <- withArray0 nullPtr signals c_sigRecursionN
+  return signals
 
 sigSoundfile :: String -> IO Signal
 sigSoundfile label = withCString label c_sigSoundfile
@@ -246,11 +257,12 @@ sigSoundfileLength = c_sigSoundfileLength
 sigSoundfileRate :: Signal -> Signal -> IO Signal
 sigSoundfileRate = c_sigSoundfileRate
 
-sigSoundfileBuffer :: Signal
-                   -> Signal
-                   -> Signal
-                   -> Signal
-                   -> IO Signal
+sigSoundfileBuffer ::
+  Signal ->
+  Signal ->
+  Signal ->
+  Signal ->
+  IO Signal
 sigSoundfileBuffer = c_sigSoundfileBuffer
 
 isNil :: Signal -> IO Bool
@@ -260,12 +272,13 @@ tree2str :: Signal -> IO String
 tree2str s = c_tree2str s >>= peekCString
 
 -- * Sample Rate Helper
+
 sigSR :: IO Signal
 sigSR = do
-    srConst <- withCString "fSampleFreq" $ \cName ->
-               withCString "<dummy.h>" $ \cFile ->
-                 c_sigFConst 0 cName cFile
-    one <- sigReal 1.0
-    maxSr <- sigReal 192000.0
-    srClamped <- c_sigMax one =<< sigFloatCast srConst
-    c_sigMin maxSr srClamped
+  srConst <- withCString "fSampleFreq" $ \cName ->
+    withCString "<dummy.h>" $ \cFile ->
+      c_sigFConst 0 cName cFile
+  one <- sigReal 1.0
+  maxSr <- sigReal 192000.0
+  srClamped <- c_sigMax one =<< sigFloatCast srConst
+  c_sigMin maxSr srClamped

@@ -1,6 +1,7 @@
-module HSFaust.Core (
-    Signal,
+module HSFaust.Core
+  ( Signal,
     Factory,
-) where
+  )
+where
 
 import           HSFaust.FFI (Factory, Signal)
