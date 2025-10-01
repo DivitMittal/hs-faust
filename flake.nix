@@ -24,7 +24,7 @@
       imports = [
         inputs.devshell.flakeModule
         inputs.treefmt-nix.flakeModule
-        ./pre-commit.nix
+        ./checks.nix
       ];
 
       perSystem = {pkgs, ...}: {
@@ -37,12 +37,12 @@
                 cabal-install
                 ghc
                 haskell-language-server
-                stylish-haskell
+                ormolu
 
                 ## C/C++
                 clang-tools
                 ;
-              inherit (pkgs.haskellPackages) cabal-gild;
+              inherit (pkgs.haskellPackages) cabal-fmt;
             };
           };
         };
@@ -52,6 +52,7 @@
             stylish-haskell.enable = true;
             clang-format.enable = true;
             #typos.enable = true;
+            ormolu.enable = true;
           };
           projectRootFile = "flake.nix";
         };
