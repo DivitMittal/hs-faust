@@ -1,7 +1,17 @@
 {
-  description = "hs-cabal";
+  description = "hs-faust flake";
+
+  outputs = inputs: let
+    inherit (inputs.flake-parts.lib) mkFlake;
+    specialArgs.customLib = builtins.import (inputs.OS-nixCfg + "/lib/custom.nix") {inherit (inputs.nixpkgs) lib;};
+  in
+    mkFlake {inherit inputs specialArgs;} ({inputs, ...}: {
+      systems = builtins.import inputs.systems;
+      imports = [./flake];
+    });
+
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     systems.url = "github:nix-systems/default";
     devshell = {
@@ -12,50 +22,21 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pre-commit-hooks = {
+    git-hooks = {
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-  };
-
-  outputs = {flake-parts, ...} @ inputs:
-    flake-parts.lib.mkFlake {inherit inputs;} {
-      systems = import inputs.systems;
-      imports = [
-        inputs.devshell.flakeModule
-        inputs.treefmt-nix.flakeModule
-        ./checks.nix
-      ];
-
-      perSystem = {pkgs, ...}: {
-        devshells = {
-          default = {
-            packages = builtins.attrValues {
-              inherit
-                (pkgs)
-                ## Haskell
-                cabal-install
-                ghc
-                haskell-language-server
-                ormolu
-
-                ## C/C++
-                clang-tools
-                ;
-              inherit (pkgs.haskellPackages) cabal-fmt;
-            };
-          };
-        };
-        treefmt = {
-          flakeCheck = false;
-          programs = {
-            stylish-haskell.enable = true;
-            clang-format.enable = true;
-            #typos.enable = true;
-            ormolu.enable = true;
-          };
-          projectRootFile = "flake.nix";
-        };
+    actions-nix = {
+      url = "github:nialov/actions.nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        git-hooks.follows = "git-hooks";
       };
     };
+    OS-nixCfg = {
+      url = "github:DivitMittal/OS-nixCfg";
+      flake = false;
+    };
+  };
 }
