@@ -1,6 +1,6 @@
 # HS-Faust: Haskell Bindings for the Faust Signal API
 
-[![Nix Flake Check](https://github.com/DivitMittal/hs-faust/actions/workflows/flake-check.yaml/badge.svg)](https://github.com/DivitMittal/hs-faust/actions/workflows/flake-check.yaml)
+[![Nix Flake Check](https://github.com/DivitMittal/hs-faust/actions/workflows/flake-check.yml/badge.svg)](https://github.com/DivitMittal/hs-faust/actions/workflows/flake-check.yml)
 
 ## Overview
 
