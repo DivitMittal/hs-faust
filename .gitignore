@@ -15,3 +15,6 @@ result-*
 ## Haskell
 **/dist**
 **/ref
+
+## git worktrees kept inside the project directory
+.worktrees/
